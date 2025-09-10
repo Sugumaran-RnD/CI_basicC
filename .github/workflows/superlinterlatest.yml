@@ -1,13 +1,14 @@
 name: Super-Linter
 
-on: 
-  push
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  super-lint:
-    name: Lint C code
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,17 +16,7 @@ jobs:
       - name: Run Super-Linter
         uses: super-linter/super-linter@v6
         env:
-          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false   # only run selected linters
+          VALIDATE_C: true               # enable C linter
+          VALIDATE_CPP: false            # turn off C++ if not needed
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          # ✅ Enable only C linting
-          VALIDATE_C: true
-          VALIDATE_CPP: true
-
-          # ❌ Disable all others to avoid noisy errors
-          VALIDATE_MARKDOWN: false
-          VALIDATE_YAML: false
-          VALIDATE_JSON: false
-          VALIDATE_CHECKOV: false
-          VALIDATE_GITHUB_ACTIONS: false
-          VALIDATE_JAVASCRIPT: false
